@@ -146,10 +146,10 @@ yarn add web3
 // ERC20 abi 
 
 export default function Home() {
-    //  Import an eRC20 abi from viem
+    //  从 viem 导入 eRC20 abi
     import { erc20Abi } from "viem";
 
-    // CELO token address on Alfajore Celo Testnet
+    // Alfajore Celo Testnet 上的 CELO 令牌地址
     const CELOTokenAddress = "0xF194afDf50B03e69Bd7D057c1Aa9e10c9954E4C9"; 
 
     const web3 = new Web3("https://alfajores-forno.celo-testnet.org")
@@ -157,7 +157,7 @@ export default function Home() {
 
     const [userAddress, setUserAddress] = useState("");
     const [isMounted, setIsMounted] = useState(false);
-    // create a state for the celoBalance
+    // 为 celoBalance 创建一个状态
     const [celoBalance, setCeloBalance ]  = useState("");
 
       useEffect(() => {
@@ -181,7 +181,7 @@ export default function Home() {
     const getBalance = async () => {
           celoContract.methods.balanceOf(userAddress as `0x${string}`).call()
             .then(balance => {
-                // Balance is returned in Wei, convert it to Ether (or token's equivalent)
+                //余额以Wei返回，请将其转换为以太币（或等价代币）
                 const tokenBalance = web3.utils.fromWei(balance, 'ether');
                 setCeloBalance((tokenBalance))
                 console.log(`The balance is: ${tokenBalance}`);
@@ -374,7 +374,7 @@ export default function Home() {
             .then((roundData: any) => {
                 const balance = (formatUnits(roundData[1], 8))
                 setCeloValue(balance)
-                // Do something with roundData
+                // 使用 roundData 做一些事情
                 console.log("Latest Round Data", roundData)
             })
     };
@@ -483,7 +483,7 @@ export default function Home() {
     const getBalance = async () => {
         celoContract.methods.balanceOf(userAddress as `0x${string}`).call()
             .then(balance => {
-                // Balance is returned in Wei, convert it to Ether (or token's equivalent)
+                // 余额以Wei返回，请将其转换为以太币（或等价代币）
                 const tokenBalance = web3.utils.fromWei(balance, 'ether');
                 setCeloBalance((tokenBalance))
                 console.log(`The balance is: ${tokenBalance}`);
