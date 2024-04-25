@@ -46,47 +46,47 @@ yarn
 2. 从 viem 导入 ERC20 abi
 
 ```typescript
- //  Import an eRC20 abi from viem
+ //  从 viem 导入一个 eRC20 abi
     import { erc20Abi } from "viem";
 ```
 
-3. we will use [web3.js](https://web3js.org/) to read from the contracts. so, we need to create an instance, initialize it with the RPC for Celo Alfajores.
+3. 我们将使用 [web3.js](https://web3js.org/)读取合约。因此，我们需要创建一个实例，并使用 Celo Alfajores 的 RPC 对其进行初始化。
 
-Install web.js
+安装 web.js
 
 ```bash
 yarn add web3
 ```
 
-Import Web3.js
+导入 Web3.js
 
 
 ```typescript
  
 ```
 
-Create the web3 instance. You will need an RPC. You can find the Celo RPCs in the [Celo docs](https://docs.celo.org/network)
+创建 web3 实例。您需要一个 RPC。您可以在 [Celo docs](https://docs.celo.org/network) 中找到 Celo RPC。
 
 ```typescript
     import Web3 from "web3";
 ```
 
 
-4. Create a Contract instance of the celo contract to be able to interact with it
+4. 创建 celo 合约的合约实例，以便与之交互
 ```typescript
     const celoContract = new web3.eth.Contract(erc20Abi, CELOTokenAddress)
 ```
 
-5. Call the contract function to read the users current CELO balance.
+5. 调用合约功能，读取用户当前的 CELO 余额。
 
 ```typescript
-    // save the balance value in the state
+    // 将余额值保存在状态中
     const [celoBalance, setCeloBalance] = useState("");
 
     const getBalance = async () => {
         celoContract.methods.balanceOf(userAddress as `0x${string}`).call()
             .then(balance => {
-                // Balance is returned in Wei, convert it to Ether (or token's equivalent)
+                // 余额以Wei返回，请将其转换为以太币（或等价代币）
                 const tokenBalance = web3.utils.fromWei(balance, 'ether');
                 setCeloBalance((tokenBalance))
                 console.log(`The balance is: ${tokenBalance}`);
@@ -99,23 +99,23 @@ Create the web3 instance. You will need an RPC. You can find the Celo RPCs in th
     };
 ```
 
-6. Call the function in a react hook above. The hook already exists and we add out code
+6. 调用上述 react 钩子中的函数。钩子已经存在，我们添加以下代码
 
 ```typescript
     useEffect(() => {
         if (isConnected && address) {
             setUserAddress(address);
 
-            // add this code, as we only want to load the user balance, once we are connected and the component is mounted.
+            // 添加此代码，因为我们只想在连接组件后加载用户余额 
             if (isMounted) {
                 getBalance();
             }
         }
-        // isMounted needs to be added here as well
+        // 这里也需要添加上 isMounted 
     }, [address, isConnected, isMounted]);
 ```
 
-7. Add some code to the HTML to show the users current amount of CELO tokens
+7. 在 HTML 中添加一些代码，以显示用户当前的 CELO 代币数量
 
 ```typescript
     return (
@@ -140,7 +140,7 @@ Create the web3 instance. You will need an RPC. You can find the Celo RPCs in th
 ```
 
 
-Your code should now look likes this: 
+现在您的代码应该是这样的 
 
 ```typescript
 // ERC20 abi 
@@ -213,21 +213,21 @@ export default function Home() {
 }
 ```
 
-## Get USD value of CELO tokens
+## 获取 CELO 代币的美元价值
 
-For this tutorial we will follow the guide from the [Chainlink docs](https://docs.chain.link/data-feeds/using-data-feeds#reading-data-feeds-offchain) for reading data prcie feeds offchain
+在本教程中，我们将按照 [Chainlink docs](https://docs.chain.link/data-feeds/using-data-feeds#reading-data-feeds-offchain) 中的指南来读取链外数据。
 
 
-1. Find the address of the CELO/USD pricefeed in the [Chainlink docs ](https://docs.chain.link/data-feeds/price-feeds/addresses?network=celo&page=1#overview)
+1. 在[Chainlink docs ](https://docs.chain.link/data-feeds/price-feeds/addresses?network=celo&page=1#overview) 中找到 CELO/USD pricefeed 的地址。
 
 ```typescript
-    // pricefeed address for CELO/USD on Alfajores
+    // Alfajores 上 CELO/USD 的 pricefeed 地址
     const celoToUsd = "0x022F9dCC73C5Fb43F2b4eF2EF9ad3eDD1D853946";
 ```
 
-2. Add the aggregatorV3InterfaceABI from the tutorial 
+2. 添加教程中的聚合器 V3InterfaceABI 
 ```typescript
-    // pricefeed address for CELO/USD on Alfajores
+    // Alfajores 上 CELO/USD 的 pricefeed 地址
     const aggregatorV3InterfaceABI = [
     {
         inputs: [],
@@ -280,14 +280,14 @@ For this tutorial we will follow the guide from the [Chainlink docs](https://doc
 ```
 
 
-3. Create the contract instance for the priceFeed contract
+3. 为 priceFeed 合约创建合约实例
 
 ```typescript
-    // contract instance of the price feed contract
+    // priceFeed 合约的合约实例
     const priceFeed = new web3.eth.Contract(aggregatorV3InterfaceABI, celoToUsd)
 ```
 
-4. Call the latestRound data to get the latest price data. This is the response data that you will get, so you will want to read the second value
+4. 调用 latestRound 数据获取最新价格数据。这是您将获得的响应数据，因此您需要读取第二个值
 ```typescript
     0: roundID,
     1: answer, // this is the value we want
@@ -296,14 +296,14 @@ For this tutorial we will follow the guide from the [Chainlink docs](https://doc
     4: answeredInRound
 ```
 
-First again let's add the state to store our celoValue
+首先，让我们再次添加状态来存储我们的 celoValue
 
 ```typescript
-   // store the celoValue in the state
+   // 将 celoValue 保存在状态中
     const [celoValue, setCeloValue] = useState("");
 ```
 
-Then the function to call the price feed data
+然后是调用 price feed 数据的函数
 
 
 ```typescript
@@ -312,17 +312,17 @@ Then the function to call the price feed data
         .latestRoundData()
         .call()
         .then((roundData: any) => {
-            // get the value from position one of the response object. The value will come back as bigInt so we will have to format it. 
+            // 从响应对象的一号位置获取值。返回值为 bigInt，因此我们必须对其进行格式化。
             const balance = (formatUnits(roundData[1], 8))
             setCeloValue(balance)
-            // Do something with roundData
+            // 使用 roundData 做一些事情
             console.log("Latest Round Data", roundData)
         })
     };
 
 ```
 
-Call the function in our hook, when the dApp is connected with a wallet and the component is mounted
+当 dApp 与钱包连接并安装组件时，调用我们钩子中的函数
 
 ```typescript
     useEffect(() => {
@@ -336,7 +336,7 @@ Call the function in our hook, when the dApp is connected with a wallet and the 
     }, [address, isConnected, isMounted]);
 ```
 
-Add some code to display the celoValue to the user
+添加一些向用户显示 celoValue 的代码
 
 ```typescript
     return (
@@ -358,12 +358,12 @@ Add some code to display the celoValue to the user
     );
 ```
 
-Now your code should look like this
+现在您的代码应该是这样的
 
 
 ```typescript
 export default function Home() {
-    const celoToUsd = "0x022F9dCC73C5Fb43F2b4eF2EF9ad3eDD1D853946"; // Price Feed Contract Address. You can find it here: https://docs.chain.link/data-feeds/price-feeds/addresses?network=celo&page=1#overview
+    const celoToUsd = "0x022F9dCC73C5Fb43F2b4eF2EF9ad3eDD1D853946"; // Price Feed 合约地址。您可以在这里找到： https://docs.chain.link/data-feeds/price-feeds/addresses?network=celo&page=1#overview
 
     const [celoValue, setCeloValue ]  = useState("");
 
@@ -381,23 +381,23 @@ export default function Home() {
 }
 ```
 
-## Final code
+## 最终代码
 
-Let's add some code to showcase the values to the user. Your whole code should look like this now. And we are done. Congratulations. You now know how to implement price feed data into your dApp. 
+让我们添加一些代码，向用户展示这些值。整个代码现在应该是这样的。我们就大功告成了。恭喜您 您现在知道如何在您的 dApp 中实现 price feed 数据了。
 
 ```typescript
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
-//  Import an eRC20 abi from viem
+//  从 viem 导入 eRC20 abi
 import { erc20Abi, formatUnits } from "viem";
 import Web3 from "web3";
 
 export default function Home() {
     const CELOTokenAddress = "0xF194afDf50B03e69Bd7D057c1Aa9e10c9954E4C9"; // CELO Testnet
-    // pricefeed address for CELO/USD on Alfajores
+    // Alfajores 上 CELO/USD 的 pricefeed 地址
     const celoToUsd = "0x022F9dCC73C5Fb43F2b4eF2EF9ad3eDD1D853946";
-    // create a Web3 instance, initialize it with the RPC for Celo Alfajores
-    // pricefeed address for CELO/USD on Alfajores
+    // 创建 Web3 实例，使用 Celo Alfajores 的 RPC 对其进行初始化
+    // Alfajores 上 CELO/USD 的 pricefeed 地址
     const aggregatorV3InterfaceABI = [
         {
             inputs: [],
@@ -449,15 +449,15 @@ export default function Home() {
     ]
     const web3 = new Web3("https://alfajores-forno.celo-testnet.org")
     const celoContract = new web3.eth.Contract(erc20Abi, CELOTokenAddress)
-    // contract instance of the price feed contract
+    // priceFeed 合約的合約实例
     const priceFeed = new web3.eth.Contract(aggregatorV3InterfaceABI, celoToUsd)
 
 
     const [userAddress, setUserAddress] = useState("");
     const [isMounted, setIsMounted] = useState(false);
-    // save the balance value in the state
+    //  在状态中保存余额值
     const [celoBalance, setCeloBalance] = useState("");
-    // store the celoValue in the state
+    // 将 celoValue 保存在状态中
     const [celoValue, setCeloValue] = useState("");
 
     const { address, isConnected } = useAccount();
@@ -500,10 +500,10 @@ export default function Home() {
             .latestRoundData()
             .call()
             .then((roundData: any) => {
-                // get the value from position one of the response object. The value will come back as bigInt so we will have to format it. 
+                // 从响应对象的一号位置获取值。返回值为 bigInt，因此我们必须对其进行格式化。
                 const balance = (formatUnits(roundData[1], 8))
                 setCeloValue(balance)
-                // Do something with roundData
+                // 使用 roundData 做一些事情
                 console.log("Latest Round Data", roundData)
             })
     };
