@@ -1,43 +1,85 @@
-# chainlink-bootcamp-celo-zh
-Chainlink Developer Bootcamp - Special Guest Session with CELO
-This repository is part of the presentation on Celo for the Chainlink Developer Bootcamp 2024.
+# Chainlink开发者训练营--CELO 特邀嘉宾专场
 
-Find the slides here:
+本资源库是[Chainlink Developer Bootcamp 2024](https://lu.ma/ChainlinkBootcamp2024?utm_source=0czoelvgwhbx) 中关于 Celo 演示的一部分。
 
-Install Celo-Composer
-The easiest way to start with Celo Composer is using @celo/celo-composer. This CLI tool lets you quickly start building dApps on Celo for multiple frameworks, including React (with either react-celo or rainbowkit-celo). To get started, just run the following command, and follow the steps:
+点击此处查看幻灯片：
 
+## 安装 Celo-Composer 
+
+开始使用 Celo Composer 的最简单方法是使用 [`@celo/celo-composer`](https://github.com/celo-org/celo-composer)。这个 CLI 工具可让您快速开始在 Celo 上为多个框架构建 dApp，包括 React（使用 react-celo 或 rainbowkit-celo）。开始使用，只需运行以下命令并按步骤操作即可：
+
+```bash
 npx @celo/celo-composer@latest create
-Install all dependencies
+```
+
+### 安装所有依赖程序
+
 run
 
+```bash
 npm i
-or
+```
 
+or 
+
+```bash
 yarn
-Get token Balance
-In the index.tsx file, you will find some template code. We will add our code in there.
+```
 
-First we want to read the balance of CELO tokens.
+## 获取令牌余额
 
-For that we will need to get the address of CELO on Alfajores. You can find the addresses in the Celo docs. Or when you check top ERC20 tokens in the celoscan.
-    const CELOTokenAddress = "0xF194afDf50B03e69Bd7D057c1Aa9e10c9954E4C9"; // CELO Testnet
-Import an ERC20 abi from viem
+在 `index.tsx` 文件中，你会发现一些模板代码。我们将在其中添加我们的代码。
+
+首先，我们要读取 CELO 代币的余额。
+
+
+
+
+
+1. 为此，我们需要获取 CELO 在 Alfajores 上的地址。您可以在 [Celo docs](https://docs.celo.org/token-addresses) 中找到地址。或者在[celoscan](https://celoscan.io/tokens)中查看顶级ERC20代币。
+
+```typescript
+    const CELOTokenAddress = "0xF194afDf50B03e69Bd7D057c1Aa9e10c9954E4C9"; // CELO 测试网
+
+```
+
+2. 从 viem 导入 ERC20 abi
+
+```typescript
  //  Import an eRC20 abi from viem
     import { erc20Abi } from "viem";
-we will use web3.js to read from the contracts. so, we need to create an instance, initialize it with the RPC for Celo Alfajores.
+```
+
+3. we will use [web3.js](https://web3js.org/) to read from the contracts. so, we need to create an instance, initialize it with the RPC for Celo Alfajores.
+
 Install web.js
 
+```bash
 yarn add web3
+```
+
 Import Web3.js
 
- 
-Create the web3 instance. You will need an RPC. You can find the Celo RPCs in the Celo docs
 
+```typescript
+ 
+```
+
+Create the web3 instance. You will need an RPC. You can find the Celo RPCs in the [Celo docs](https://docs.celo.org/network)
+
+```typescript
     import Web3 from "web3";
-Create a Contract instance of the celo contract to be able to interact with it
+```
+
+
+4. Create a Contract instance of the celo contract to be able to interact with it
+```typescript
     const celoContract = new web3.eth.Contract(erc20Abi, CELOTokenAddress)
-Call the contract function to read the users current CELO balance.
+```
+
+5. Call the contract function to read the users current CELO balance.
+
+```typescript
     // save the balance value in the state
     const [celoBalance, setCeloBalance] = useState("");
 
@@ -55,7 +97,11 @@ Call the contract function to read the users current CELO balance.
 
         return;
     };
-Call the function in a react hook above. The hook already exists and we add out code
+```
+
+6. Call the function in a react hook above. The hook already exists and we add out code
+
+```typescript
     useEffect(() => {
         if (isConnected && address) {
             setUserAddress(address);
@@ -67,7 +113,11 @@ Call the function in a react hook above. The hook already exists and we add out 
         }
         // isMounted needs to be added here as well
     }, [address, isConnected, isMounted]);
-Add some code to the HTML to show the users current amount of CELO tokens
+```
+
+7. Add some code to the HTML to show the users current amount of CELO tokens
+
+```typescript
     return (
         <div className="flex flex-col justify-center items-center">
             <div className="h1">
@@ -87,8 +137,12 @@ Add some code to the HTML to show the users current amount of CELO tokens
             )}
         </div>
     );
-Your code should now look likes this:
+```
 
+
+Your code should now look likes this: 
+
+```typescript
 // ERC20 abi 
 
 export default function Home() {
@@ -157,13 +211,22 @@ export default function Home() {
         </div>
     );
 }
-Get USD value of CELO tokens
-For this tutorial we will follow the guide from the Chainlink docs for reading data prcie feeds offchain
+```
 
-Find the address of the CELO/USD pricefeed in the Chainlink docs
+## Get USD value of CELO tokens
+
+For this tutorial we will follow the guide from the [Chainlink docs](https://docs.chain.link/data-feeds/using-data-feeds#reading-data-feeds-offchain) for reading data prcie feeds offchain
+
+
+1. Find the address of the CELO/USD pricefeed in the [Chainlink docs ](https://docs.chain.link/data-feeds/price-feeds/addresses?network=celo&page=1#overview)
+
+```typescript
     // pricefeed address for CELO/USD on Alfajores
     const celoToUsd = "0x022F9dCC73C5Fb43F2b4eF2EF9ad3eDD1D853946";
-Add the aggregatorV3InterfaceABI from the tutorial
+```
+
+2. Add the aggregatorV3InterfaceABI from the tutorial 
+```typescript
     // pricefeed address for CELO/USD on Alfajores
     const aggregatorV3InterfaceABI = [
     {
@@ -214,21 +277,36 @@ Add the aggregatorV3InterfaceABI from the tutorial
         type: "function",
     },
     ]
-Create the contract instance for the priceFeed contract
+```
+
+
+3. Create the contract instance for the priceFeed contract
+
+```typescript
     // contract instance of the price feed contract
     const priceFeed = new web3.eth.Contract(aggregatorV3InterfaceABI, celoToUsd)
-Call the latestRound data to get the latest price data. This is the response data that you will get, so you will want to read the second value
+```
+
+4. Call the latestRound data to get the latest price data. This is the response data that you will get, so you will want to read the second value
+```typescript
     0: roundID,
     1: answer, // this is the value we want
     3: timeStamp,
     2: startedAt,
     4: answeredInRound
+```
+
 First again let's add the state to store our celoValue
 
+```typescript
    // store the celoValue in the state
     const [celoValue, setCeloValue] = useState("");
+```
+
 Then the function to call the price feed data
 
+
+```typescript
     const getUSDValue = async () => {
     priceFeed.methods
         .latestRoundData()
@@ -241,8 +319,12 @@ Then the function to call the price feed data
             console.log("Latest Round Data", roundData)
         })
     };
+
+```
+
 Call the function in our hook, when the dApp is connected with a wallet and the component is mounted
 
+```typescript
     useEffect(() => {
         if (isConnected && address) {
             setUserAddress(address);
@@ -252,8 +334,11 @@ Call the function in our hook, when the dApp is connected with a wallet and the 
             }
         }
     }, [address, isConnected, isMounted]);
+```
+
 Add some code to display the celoValue to the user
 
+```typescript
     return (
         <div className="flex flex-col justify-center items-center">
             <div className="h1">
@@ -271,8 +356,12 @@ Add some code to display the celoValue to the user
             )}
         </div>
     );
+```
+
 Now your code should look like this
 
+
+```typescript
 export default function Home() {
     const celoToUsd = "0x022F9dCC73C5Fb43F2b4eF2EF9ad3eDD1D853946"; // Price Feed Contract Address. You can find it here: https://docs.chain.link/data-feeds/price-feeds/addresses?network=celo&page=1#overview
 
@@ -290,9 +379,13 @@ export default function Home() {
             })
     };
 }
-Final code
-Let's add some code to showcase the values to the user. Your whole code should look like this now. And we are done. Congratulations. You now know how to implement price feed data into your dApp.
+```
 
+## Final code
+
+Let's add some code to showcase the values to the user. Your whole code should look like this now. And we are done. Congratulations. You now know how to implement price feed data into your dApp. 
+
+```typescript
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 //  Import an eRC20 abi from viem
@@ -433,41 +526,4 @@ export default function Home() {
         </div>
     );
 }
-About
-No description, website, or topics provided.
-Resources
- Readme
-License
- MIT license
- Activity
-Stars
- 0 stars
-Watchers
- 1 watching
-Forks
- 0 forks
-Report repository
-Releases
-No releases published
-Packages
-No packages published
-Languages
-TypeScript
-63.1%
- 
-JavaScript
-32.5%
- 
-Solidity
-4.2%
- 
-CSS
-0.2%
-Footer
-© 2024 GitHub, Inc.
-Footer navigation
-Terms
-Privacy
-Security
-Status
-Docs
+```
