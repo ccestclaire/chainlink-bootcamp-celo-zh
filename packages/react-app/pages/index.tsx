@@ -29,7 +29,6 @@ export default function Home() {
 
             if (isMounted) {
                 getBalance();
-                getUSDValue()
             }
         }
     }, [address, isConnected, isMounted]);
